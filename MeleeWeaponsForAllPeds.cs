@@ -1,8 +1,6 @@
 ﻿using GTA;
 using GTA.Native;
 using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 public class MeleeWeaponsForAllPeds : Script
 {
@@ -52,7 +50,7 @@ public class MeleeWeaponsForAllPeds : Script
                     int allowedWeaponsIndex = r.Next(allowedWeapons.Length); //Get a random weapon from allowed weapons list
                     p.Weapons.Give(allowedWeapons[allowedWeaponsIndex], 0, true, true); //Give that weapon to the ped
                 }
-                processedPeds.Add(p);
+
             }
         }
     }
