@@ -2,7 +2,7 @@
 using GTA.Native;
 using System;
 
-public class MinigunsForAllPeds : Script
+public class MinigunsForEnemies : Script
 {
 
     private WeaponHash[] allowedWeapons = { //Peds carrying these weapons won't be given the minigun
@@ -17,7 +17,7 @@ public class MinigunsForAllPeds : Script
         Relationship.Pedestrians
     };
 
-    public MinigunsForAllPeds()
+    public MinigunsForEnemies()
     {
         Tick += OnTick;
         Interval = 100;
