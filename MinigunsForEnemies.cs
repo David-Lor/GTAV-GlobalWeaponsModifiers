@@ -31,7 +31,7 @@ public class MinigunsForEnemies : Script
 
                 if (Array.IndexOf(allowedWeapons, p.Weapons.Current.Hash) < 0) { //If current ped's weapon is not allowed...
                     p.Weapons.RemoveAll(); //Remove all current weapons
-                    p.Weapons.Give(WeaponHash.Minigun, 500, true, true); //Give the minigun
+                    p.Weapons.Give(WeaponHash.Minigun, 9999, true, true); //Give the minigun
                     p.FiringPattern = FiringPattern.FullAuto; //Make the ped shoot constantly (not in short bursts)
                     Function.Call(Hash.SET_PED_COMBAT_ABILITY, p, 100); //http://www.dev-c.com/nativedb/func/info/c7622c0d36b2fda8
                     Function.Call(Hash.SET_PED_SHOOT_RATE, p, 1000); //Increase shooting rate?
