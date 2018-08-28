@@ -13,7 +13,7 @@ public class MusketsForAllPeds : Script
     public MusketsForAllPeds()
     {
         Tick += OnTick;
-        Interval = 25;
+        Interval = 100;
     }
 
     void OnTick(object sender, EventArgs e)
