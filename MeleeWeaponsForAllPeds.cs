@@ -1,57 +1,64 @@
-﻿using GTA;
-using GTA.Native;
-using System;
+/* Grand Theft Auto V - Melee Weapons for all Peds Script - By David Lor @ https://github.com/David-Lor/GTAV-GlobalWeaponsModifiers
 
+IMPORTANT: to avoid peds fleeing from combat, you should apply this mod: https://www.gta5-mods.com/misc/peds-without-fear
+
+*/
+
+using System;
+using GTA;
+using GTA.Native;
+
+// ReSharper disable once UnusedMember.Global, CheckNamespace, InvertIf
 public class MeleeWeaponsForAllPeds : Script
 {
 
-    private WeaponHash[] allowedWeapons = {
-        WeaponHash.Unarmed,
+    private readonly WeaponHash unarmed = WeaponHash.Unarmed;
+    
+    // TODO: analyze all weapons, only give melee weapon if any of ped's weapons is out of this array.
+    private readonly WeaponHash[] allowedWeapons = {
+        //WeaponHash.Unarmed,
         WeaponHash.Bat,
         WeaponHash.BattleAxe,
         WeaponHash.Bottle,
         WeaponHash.Crowbar,
         WeaponHash.Dagger,
-        WeaponHash.GolfClub,
+        //WeaponHash.GolfClub,
         WeaponHash.Hammer,
         WeaponHash.Hatchet,
         WeaponHash.Knife,
-        WeaponHash.Machete,
+        //WeaponHash.Machete,
         WeaponHash.PoolCue,
         WeaponHash.SwitchBlade,
-        WeaponHash.Wrench
+        WeaponHash.Wrench,
+        WeaponHash.Flashlight
     };
 
-    private Random r = new Random((int)DateTime.Now.Ticks);
-
+    private readonly Random random;
+    
     public MeleeWeaponsForAllPeds()
     {
-        Tick += OnTick;
-        Interval = 25;
+        Tick += Loop;
+        Interval = 1000;
+        random = new Random((int)DateTime.Now.Ticks);
+        UI.Notify("Global Weapons for All Peds LOADED");
     }
-
-    void OnTick(object sender, EventArgs e)
+    
+    private void Loop(object sender, EventArgs e)
     {
-        foreach (Ped p in World.GetAllPeds()) { //Get all peds in game world
-            if (!p.IsPlayer && p.IsHuman && p.IsAlive && p.Exists()) { //Only act on non-player, human, alive, existing peds
-
-                //Avoid ped from fleeing
-                //GTA.Native.Function.Call(GTA.Native.Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, p, true);
-                GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_FLEE_ATTRIBUTES, p, 0, 0); //Disable fleeing
-                //GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_COMBAT_ATTRIBUTES, p, 17, 1); //Allow fight with disadvantage
-                GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_COMBAT_ATTRIBUTES, p, 46, 1); //Allow fight with disadvantage
-                GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_COMBAT_ATTRIBUTES, p, 5, 1); //Allow fight with disadvantage
-                //GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_SEEING_RANGE, p, 0.0f);
-                //GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_HEARING_RANGE, p, 0.0f);
-                //GTA.Native.Function.Call(GTA.Native.Hash.SET_PED_ALERTNESS, 0);
-
-                if (Array.IndexOf(allowedWeapons, p.Weapons.Current.Hash) < 0) { //If current ped's weapon is not allowed...
-                    p.Weapons.RemoveAll(); //Remove all current weapons
-                    int allowedWeaponsIndex = r.Next(allowedWeapons.Length); //Get a random weapon from allowed weapons list
-                    p.Weapons.Give(allowedWeapons[allowedWeaponsIndex], 0, true, true); //Give that weapon to the ped
-                }
-
+        foreach (Ped ped in World.GetAllPeds())
+        {
+            WeaponHash currentWeapon = ped.Weapons.Current.Hash;
+            if (Array.IndexOf(allowedWeapons, currentWeapon) < 0 || currentWeapon == unarmed)
+            {
+                int allowedWeaponsIndex = random.Next(allowedWeapons.Length);
+                WeaponHash newWeapon = allowedWeapons[allowedWeaponsIndex];
+                
+                ped.Weapons.RemoveAll();
+                bool equip = (currentWeapon != unarmed);
+                ped.Weapons.Give(newWeapon, 0, equip, true);
             }
         }
+
     }
+    
 }
