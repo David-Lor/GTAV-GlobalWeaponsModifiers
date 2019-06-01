@@ -16,17 +16,17 @@ public class MeleeWeaponsForAllPeds : Script
     
     // TODO: analyze all weapons, only give melee weapon if any of ped's weapons is out of this array.
     private readonly WeaponHash[] allowedWeapons = {
-        //WeaponHash.Unarmed,
+        WeaponHash.Unarmed,
         WeaponHash.Bat,
         WeaponHash.BattleAxe,
         WeaponHash.Bottle,
         WeaponHash.Crowbar,
         WeaponHash.Dagger,
-        //WeaponHash.GolfClub,
+        WeaponHash.GolfClub,
         WeaponHash.Hammer,
         WeaponHash.Hatchet,
         WeaponHash.Knife,
-        //WeaponHash.Machete,
+        WeaponHash.Machete,
         WeaponHash.PoolCue,
         WeaponHash.SwitchBlade,
         WeaponHash.Wrench,
@@ -38,7 +38,7 @@ public class MeleeWeaponsForAllPeds : Script
     public MeleeWeaponsForAllPeds()
     {
         Tick += Loop;
-        Interval = 1000;
+        Interval = 500;
         random = new Random((int)DateTime.Now.Ticks);
         UI.Notify("Global Weapons for All Peds LOADED");
     }
@@ -48,7 +48,7 @@ public class MeleeWeaponsForAllPeds : Script
         foreach (Ped ped in World.GetAllPeds())
         {
             WeaponHash currentWeapon = ped.Weapons.Current.Hash;
-            if (Array.IndexOf(allowedWeapons, currentWeapon) < 0 || currentWeapon == unarmed)
+            if (!ped.IsPlayer && ped.IsHuman && ped.IsAlive && ped.Exists() && (Array.IndexOf(allowedWeapons, currentWeapon) < 0 || currentWeapon == unarmed))
             {
                 int allowedWeaponsIndex = random.Next(allowedWeapons.Length);
                 WeaponHash newWeapon = allowedWeapons[allowedWeaponsIndex];
